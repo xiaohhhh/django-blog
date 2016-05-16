@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.js"></script>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+    <h1>The Django Blog</h1>
+    <ul class="nav nav-tabs">
+     <li><a href="/blog/">blog</a></li>
+     <li><a href="/blog/post">post</a></li>
+     <li><a href="/admin/">admin</a></li>
+     <li><a href="/blog/login/">login</a></li>
+     <li><a href="/blog/register">register</a></li>
+    </ul>
+    </div>
+    <div class="container">
+    {% block content %}{% endblock %}
+    </div>
+    <div class="container">
+    {% block footer %}
+    <hr>
+    <p>Thanks for visiting my site.</p>
+    {% endblock %}
+    </div>
+</body>
+</html>

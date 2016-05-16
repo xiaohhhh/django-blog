@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}The current time{% endblock %}
+
+{% block content %}
+
+<form  action="/blog/add_entry/" method="post">
+    {% csrf_token %}
+    <ul  class="list-group">
+        {{form_comment}}
+    </ul>
+    <input class="btn btn-default" type="submit" value="Submit">
+</form>
+
+{% endblock %}
+
+
+
+
+
+

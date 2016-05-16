@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}The current time{% endblock %}
+
+{% block content %}
+
+{% if entry %}
+
+        <div class="panel panel-default">
+        <div class="panel-heading"><a href="/blog/entry/{{ entry.id }}/">{{ entry.headline }}</a></div>
+        <div class="panel-body">{{ entry.body_text }}</div>
+        </div>
+    <ul class="list-group">
+        <li class="list-group-item">{{ entry.pub_date }}</li>
+        <li class="list-group-item">{{ entry.mod_date }}</li>
+        <li class="list-group-item">{{ entry.authors }}</li>
+        <li class="list-group-item">{{ entry.n_comments }}</li>
+        <li class="list-group-item">{{ entry.n_pingbacks }}</li>
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+{% endblock %}
+
+{{form_comment}}
+

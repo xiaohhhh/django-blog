@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}The current time{% endblock %}
+
+{% block content %}
+
+{% if latest_entry_list %}
+    <ul class="list-group">
+    {% for entry in latest_entry_list %}
+        <li class="list-group-item"><a href="/blog/entry/{{ entry.id }}/">{{ entry.headline }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+{% endblock %}
+
+
+
+
