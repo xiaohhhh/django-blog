@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
 from .models import Entry
@@ -10,6 +11,10 @@ from django.http import HttpResponseRedirect
 
 
 def index(request):
+    if request.COOKIES.has_key("username"):
+        print request.COOKIES['username']
+    else:
+        pass
     latest_entry_list = Entry.objects.all()
     template = loader.get_template('index.html')
     print latest_entry_list
@@ -41,12 +46,12 @@ def post(request):
     return  HttpResponse(template.render(context, request))
 
 def add_entry(request):
-    print request.POST['headline']
+    print request.POST['head_line']
     now = datetime.now()
-    entry=Entry(headline=request.POST['headline'],body_text=request.POST['body_text'],pub_date = now,
+    entry=Entry(head_line=request.POST['head_line'],body_text=request.POST['body_text'],pub_date = now,
                 mod_date = now,n_comments = 10,n_pingbacks = 10,rating = 10,)
     entry.save()
-    context = {'form_comment': request.POST['headline']}
+    context = {'form_comment': request.POST['head_line']}
     template = loader.get_template('add_entry.html')
     return HttpResponse(template.render(context, request))
 
@@ -84,11 +89,19 @@ def login(request):
     return  HttpResponse(template.render(context, request))
 
 def is_user(request):
-    print request.POST['username']
     user=Author.objects.filter(username=request.POST['username'],password=request.POST['password'])
     print user
+    response = HttpResponse()
+    if(user):
+        response.set_cookie('username', user)
+    else:
+        return HttpResponseRedirect("/login/")
     return HttpResponseRedirect("/blog/")
 
+def logout(request):
+    response = HttpResponse()
+    response.delete_cookie('username')
+    return HttpResponseRedirect("/blog/")
 
 
 

@@ -17,7 +17,7 @@ class Author(models.Model):
         return self.username
 
 class Entry(models.Model):
-    headline = models.CharField(max_length=255)
+    head_line = models.CharField(max_length=255)
     body_text = models.TextField()
     pub_date = models.DateField()
     mod_date = models.DateField()
@@ -26,4 +26,4 @@ class Entry(models.Model):
     rating = models.IntegerField()
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.headline
+        return self.head_line

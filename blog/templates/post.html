@@ -6,7 +6,7 @@
 
 <form  action="/blog/add_entry/" method="post">
     {% csrf_token %}
-    <ul  class="list-group">
+    <ul  class="form-group">
         {{form_comment}}
     </ul>
     <input class="btn btn-default" type="submit" value="Submit">

@@ -7,7 +7,7 @@
 {% if latest_entry_list %}
     <ul class="list-group">
     {% for entry in latest_entry_list %}
-        <li class="list-group-item"><a href="/blog/entry/{{ entry.id }}/">{{ entry.headline }}</a></li>
+        <li class="list-group-item"><a href="/blog/entry/{{ entry.id }}/">{{ entry.head_line }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
