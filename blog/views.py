@@ -8,18 +8,26 @@ from .models import Blog
 from django import forms
 from datetime import *
 from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib import auth
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 
 
 def index(request):
-    if request.COOKIES.has_key("username"):
-        print request.COOKIES['username']
+    if request.user.is_authenticated():
+        # Do something for authenticated users.
+        login=True
     else:
-        pass
+        # Do something for anonymous users.
+        login = False
     latest_entry_list = Entry.objects.all()
     template = loader.get_template('index.html')
-    print latest_entry_list
+    #print latest_entry_list
     context = {
         'latest_entry_list': latest_entry_list,
+        'login':login,
     }
     return HttpResponse(template.render(context, request))
 
@@ -63,6 +71,7 @@ def register(request):
     class RegisterForm(forms.Form):
         username = forms.CharField()
         password = forms.CharField()
+        email = forms.CharField()
 
     print(vars(Entry))
     register_comment = RegisterForm(initial={}, auto_id=False)
@@ -72,7 +81,7 @@ def register(request):
     return  HttpResponse(template.render(context, request))
 
 def add_user(request):
-    user=Author(username=request.POST['username'],password=request.POST['password'])
+    user = User.objects.create_user(request.POST['username'], request.POST['email'], request.POST['password'])
     user.save()
     return HttpResponseRedirect("/blog/")
 
@@ -89,18 +98,41 @@ def login(request):
     return  HttpResponse(template.render(context, request))
 
 def is_user(request):
-    user=Author.objects.filter(username=request.POST['username'],password=request.POST['password'])
-    print user
-    response = HttpResponse()
-    if(user):
-        response.set_cookie('username', user)
+    '''
+    username=request.POST['username']
+    print username
+    password=request.POST['password']
+    print password
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            #login(request, user)
+            return HttpResponseRedirect("/blog/")
+            #print("User is valid, active and authenticated")
+        else:
+            print("The password is valid, but the account has been disabled!")
     else:
-        return HttpResponseRedirect("/login/")
+        # the authentication system was unable to verify the username and password
+        print("The username and password were incorrect.")
+    return HttpResponseRedirect("/blog/")
+    '''
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            auth.login(request, user)
+            # Redirect to a success page.
+        else:
+            # Return a 'disabled account' error message
+            pass
+    else:
+        # Return an 'invalid login' error message.
+        pass
     return HttpResponseRedirect("/blog/")
 
 def logout(request):
-    response = HttpResponse()
-    response.delete_cookie('username')
+    auth.logout(request)
     return HttpResponseRedirect("/blog/")
 
 
