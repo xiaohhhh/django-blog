@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}The current time{% endblock %}
+{% block title %}index{% endblock %}
 
 {% block content %}
 
 {% if latest_entry_list %}
     <ul class="list-group">
     {% for entry in latest_entry_list %}
-        <li class="list-group-item"><a href="/blog/entry/{{ entry.id }}/">{{ entry.headline }}</a></li>
+        <li class="list-group-item"><a href="/blog/entry/{{ entry.id }}/">{{ entry.head_line }}</a></li>
     {% endfor %}
     </ul>
 {% else %}

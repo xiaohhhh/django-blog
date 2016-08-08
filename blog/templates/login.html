@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}The current time{% endblock %}
+{% block title %}login{% endblock %}
 
 {% block content %}
 
 <form  action="/blog/is_user/" method="post">
     {% csrf_token %}
-    <ul  class="list-group">
+    <ul  class="form-group">
         {{login_form}}
     </ul>
     <input class="btn btn-default" type="submit" value="Submit">

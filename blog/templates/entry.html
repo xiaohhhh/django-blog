@@ -1,22 +1,51 @@
 {% extends "base.html" %}
 
-{% block title %}The current time{% endblock %}
+{% block title %}{{ entry.head_line }}{% endblock %}
 
 {% block content %}
 
 {% if entry %}
 
         <div class="panel panel-default">
-        <div class="panel-heading"><a href="/blog/entry/{{ entry.id }}/">{{ entry.headline }}</a></div>
-        <div class="panel-body">{{ entry.body_text }}</div>
+        <div class="panel-heading"><a href="/blog/entry/{{ entry.id }}/">{{ entry.head_line }}</a></div>
+        <div class="panel-body">
+            {{ entry.body_text |safe}}
         </div>
-    <ul class="list-group">
-        <li class="list-group-item">{{ entry.pub_date }}</li>
-        <li class="list-group-item">{{ entry.mod_date }}</li>
-        <li class="list-group-item">{{ entry.authors }}</li>
-        <li class="list-group-item">{{ entry.n_comments }}</li>
-        <li class="list-group-item">{{ entry.n_pingbacks }}</li>
-    </ul>
+        </div>
+    author:<span class="label label-success">{{ username }}</span>
+    pub_date:<span class="label label-default">{{ entry.pub_date }}</span>
+    mod_date:<span class="label label-info">{{ entry.mod_date }}</span>
+
+<br />
+<br />
+<ul class="list-unstyled">
+      {% for comment in comments %}
+    <li>
+    {{comment.comments |safe}}
+    </li>
+    <hr/>
+{% endfor %}
+</ul>
+
+
+
+
+<br />
+<form  action="/blog/add_comment/" method="post">{% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="entry_id" value={{entry.id}}>
+	<textarea name="comments" id="editor1" rows="10" cols="80">
+                This is my textarea to be replaced with CKEditor.
+            </textarea>
+            <script>
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'editor1' );
+            </script>
+        <br />
+    <input class="btn btn-default" type="submit" value="Submit">
+    </div>
+</form>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
