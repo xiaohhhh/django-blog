@@ -3,6 +3,8 @@ from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
 from .models import Entry
+from .models import Comment
+from .models import Category
 from django import forms
 from datetime import *
 from django.http import HttpResponseRedirect
@@ -12,6 +14,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import HTMLParser
+
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
 
 def index(request):
     if request.user.is_authenticated():
@@ -36,32 +42,48 @@ def entry(request,entry_id):
     html_parser = HTMLParser.HTMLParser()
     entry.body_text== html_parser.unescape(entry.body_text)
     print (entry)
-    print (entry.body_text)
+    #print (entry.body_text)
     context = {
-        'entry': entry,
+        'entry': entry
     }
     return HttpResponse(template.render(context, request))
 
+@login_required
 @csrf_exempt
 def post(request):
     template = loader.get_template('post.html')
     return  HttpResponse(template.render(request))
 
+@login_required
 @csrf_exempt
 def add_entry(request):
     html_parser = HTMLParser.HTMLParser()
-    print request.POST['head_line']
+    user_id=request.user.id
     now = datetime.now()
     body_text = request.POST['body_text']
-    print (body_text)
+    #print (body_text)
     txt = html_parser.unescape(body_text)
-    print(txt)
+    #print(txt)
     entry=Entry(head_line=request.POST['head_line'],body_text=txt,pub_date = now,
-                mod_date = now,n_comments = 0,n_pingbacks = 0,rating = 0,category_id=1,user_id=1)
+                mod_date = now,n_comments = 0,n_pingbacks = 0,rating = 0,category_id=1,user_id=user_id)
     entry.save()
     context = {'form_comment': request.POST['head_line']}
     template = loader.get_template('add_entry.html')
     return HttpResponse(template.render(context, request))
+
+@login_required
+@csrf_exempt
+def add_comment(request):
+    html_parser = HTMLParser.HTMLParser()
+    now = datetime.now()
+    comments = request.POST['comments']
+    user_id = request.user.id
+    entry_id=request.POST['entry_id']
+    print entry_id
+    comments = html_parser.unescape(comments)
+    comment=Comment(comments=comments,pub_date = now,mod_date = now,entry_id = entry_id,user_id = user_id)
+    comment.save()
+    return HttpResponseRedirect("/blog/")
 
 def register(request):
     class RegisterForm(forms.Form):
@@ -109,6 +131,7 @@ def is_user(request):
         pass
     return HttpResponseRedirect("/blog/")
 
+@login_required
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect("/blog/")

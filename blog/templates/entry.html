@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}The current time{% endblock %}
+{% block title %}{{ entry.head_line }}{% endblock %}
 
 {% block content %}
 
@@ -14,6 +14,22 @@
         </div>
     pub_date:<span class="label label-default">{{ entry.pub_date }}</span>
     mod_date:<span class="label label-info">{{ entry.mod_date }}</span>
+<br /><br />
+<form  action="/blog/add_comment/" method="post">{% csrf_token %}
+    <div class="form-group">
+        <input type="hidden" name="entry_id" value={{entry.id}}>
+	<textarea name="comments" id="editor1" rows="10" cols="80">
+                This is my textarea to be replaced with CKEditor.
+            </textarea>
+            <script>
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'editor1' );
+            </script>
+        <br />
+    <input class="btn btn-default" type="submit" value="Submit">
+    </div>
+</form>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
