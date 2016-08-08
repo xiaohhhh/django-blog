@@ -21,10 +21,8 @@ sys.setdefaultencoding( "utf-8" )
 
 def index(request):
     if request.user.is_authenticated():
-        # Do something for authenticated users.
         login=True
     else:
-        # Do something for anonymous users.
         login = False
     latest_entry_list = Entry.objects.all()
     template = loader.get_template('index.html')
@@ -38,13 +36,18 @@ def index(request):
 
 def entry(request,entry_id):
     entry = Entry.objects.get(id = entry_id)
+    user_id=entry.user_id
+    user = User.objects.get(id=user_id)
+    comments=Comment.objects.filter(entry_id=entry_id)
     template = loader.get_template('entry.html')
     html_parser = HTMLParser.HTMLParser()
     entry.body_text== html_parser.unescape(entry.body_text)
-    print (entry)
+    #print (entry)
     #print (entry.body_text)
     context = {
-        'entry': entry
+        'entry': entry,
+        'comments':comments,
+        'username':user.username
     }
     return HttpResponse(template.render(context, request))
 
@@ -67,9 +70,8 @@ def add_entry(request):
     entry=Entry(head_line=request.POST['head_line'],body_text=txt,pub_date = now,
                 mod_date = now,n_comments = 0,n_pingbacks = 0,rating = 0,category_id=1,user_id=user_id)
     entry.save()
-    context = {'form_comment': request.POST['head_line']}
-    template = loader.get_template('add_entry.html')
-    return HttpResponse(template.render(context, request))
+    entry_last=Entry.objects.filter(user_id=user_id).last()
+    return HttpResponseRedirect("/blog/entry/" + str(entry_last.id) + "/")
 
 @login_required
 @csrf_exempt
@@ -83,7 +85,7 @@ def add_comment(request):
     comments = html_parser.unescape(comments)
     comment=Comment(comments=comments,pub_date = now,mod_date = now,entry_id = entry_id,user_id = user_id)
     comment.save()
-    return HttpResponseRedirect("/blog/")
+    return HttpResponseRedirect("/blog/entry/"+str(entry_id)+"/")
 
 def register(request):
     class RegisterForm(forms.Form):

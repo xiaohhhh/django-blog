@@ -12,9 +12,25 @@
             {{ entry.body_text |safe}}
         </div>
         </div>
+    author:<span class="label label-success">{{ username }}</span>
     pub_date:<span class="label label-default">{{ entry.pub_date }}</span>
     mod_date:<span class="label label-info">{{ entry.mod_date }}</span>
-<br /><br />
+
+<br />
+<br />
+<ul class="list-unstyled">
+      {% for comment in comments %}
+    <li>
+    {{comment.comments |safe}}
+    </li>
+    <hr/>
+{% endfor %}
+</ul>
+
+
+
+
+<br />
 <form  action="/blog/add_comment/" method="post">{% csrf_token %}
     <div class="form-group">
         <input type="hidden" name="entry_id" value={{entry.id}}>
