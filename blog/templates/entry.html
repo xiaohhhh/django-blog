@@ -5,11 +5,13 @@
 {% block content %}
 
 {% if entry %}
+
         <div class="panel panel-default">
         <div class="panel-heading"><a href="/blog/entry/{{ entry.id }}/">{{ entry.head_line }}</a></div>
-        <div class="panel-body">{{ entry.body_text }}</div>
+        <div class="panel-body">
+            {{ entry.body_text |safe}}
         </div>
-
+        </div>
     pub_date:<span class="label label-default">{{ entry.pub_date }}</span>
     mod_date:<span class="label label-info">{{ entry.mod_date }}</span>
 {% else %}

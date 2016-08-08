@@ -4,14 +4,22 @@
 
 {% block content %}
 
-<form  action="/blog/add_entry/" method="post">
-    {% csrf_token %}
-    <ul  class="form-group">
-        {{form_comment}}
-    </ul>
+<form  action="/blog/add_entry/" method="post">{% csrf_token %}
+    <div class="form-group">
+    <input class="form-control" name="head_line">
+        <br />
+	<textarea name="body_text" id="editor1" rows="10" cols="80">
+                This is my textarea to be replaced with CKEditor.
+            </textarea>
+            <script>
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'editor1' );
+            </script>
+        <br />
     <input class="btn btn-default" type="submit" value="Submit">
+    </div>
 </form>
-
 {% endblock %}
 
 
