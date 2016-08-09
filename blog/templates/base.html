@@ -10,6 +10,12 @@
     {% load staticfiles %}
     <script src="{% static "js/jquery.hotkeys.js" %}"></script>
     <script src="{% static "js/ckeditor/ckeditor.js" %}"></script>
+    <script src="{% static "js/tinymce/js/tinymce/tinymce.min.js" %}"></script>
+      <script>
+        tinymce.init({
+        selector: '#tinymceditor'
+  });
+  </script>
     <!--
     {% load staticfiles %}
     <script src="{% static "js/bootstrap-wysiwyg.min.js"%}"></script>
@@ -22,7 +28,7 @@
     <script>
 $(document).ready(function(){
   $(".btn").click(function(){
-    var comments=$("#editor1").val();
+    var comments=$("#tinymceditor").val();
     //console.log(comments);
     var entry_id=$("#entry_id").val();
     //console.log(entry_id);
@@ -44,9 +50,10 @@ $(document).ready(function(){
 </head>
 <body>
     <div class="container">
-    <h1>The Django Blog</h1>
+    <h4>The Django Blog</h4>
     <ul class="nav nav-tabs">
      <li><a href="/blog/">blog</a></li>
+     <li><a href="/categories/1/">categories</a></li>
      <li><a href="/blog/post">post</a></li>
         {% if login %}
         <li><a href="/blog/logout/">logout</a></li>

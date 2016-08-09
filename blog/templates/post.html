@@ -17,6 +17,15 @@
                 CKEDITOR.replace( 'editor1' );
             </script>
         <br />
+     {% if category_list %}
+    <p>category</p>
+    {% for category in category_list %}
+        <label for="{{ category.id }}">{{ category.name }} : <input type="radio" id="{{ category.id }}" name="category_id" value="{{ category.id }}" /></label>
+    {% endfor %}
+    {% else %}
+    <p>No polls are available.</p>
+    {% endif %}
+        <br />
     <input class="btn btn-default" type="submit" value="Submit">
     </div>
 </form>

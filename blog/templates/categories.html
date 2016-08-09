@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+
+{% if categories_list %}
+    <ul class="list-group">
+    {% for category in categories_list %}
+        <li class="list-group-item"><a href="/blog/category/{{ category.id }}/">{{ category.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+<p>add category</p>
+
+<form  action="/blog/add_category/" method="post">
+    {% csrf_token %}
+    <ul class="form-group">
+        {{category_form}}
+    </ul>
+    <input class="btn btn-default" type="submit" value="Submit">
+</form>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if categories_list.has_previous %}
+            <a href="?page={{ categories_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ categories_list.number }} of {{ categories_list.paginator.num_pages }}.
+        </span>
+
+        {% if categories_list.has_next %}
+            <a href="?page={{ categories_list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
