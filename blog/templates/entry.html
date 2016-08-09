@@ -5,7 +5,6 @@
 {% block content %}
 
 {% if entry %}
-
         <div class="panel panel-default">
         <div class="panel-heading"><a href="/blog/entry/{{ entry.id }}/">{{ entry.head_line }}</a></div>
         <div class="panel-body">
@@ -19,7 +18,7 @@
 <br />
 <br />
 <ul class="list-unstyled">
-      {% for comment in comments %}
+    {% for comment in comments %}
     <li>
     {{comment.comments |safe}}
     </li>
@@ -27,14 +26,13 @@
 {% endfor %}
 </ul>
 
-
-
-
 <br />
-<form  action="/blog/add_comment/" method="post">{% csrf_token %}
+<!--
+<form  action="/blog/add_comment/" method="post">
+-->
     <div class="form-group">
-        <input type="hidden" name="entry_id" value={{entry.id}}>
-	<textarea name="comments" id="editor1" rows="10" cols="80">
+            <input type="hidden" id="entry_id" name="entry_id" value={{entry.id}}>
+	        <textarea name="comments" id="editor1" rows="10" cols="80">
                 This is my textarea to be replaced with CKEditor.
             </textarea>
             <script>
@@ -43,9 +41,11 @@
                 CKEDITOR.replace( 'editor1' );
             </script>
         <br />
-    <input class="btn btn-default" type="submit" value="Submit">
+        <button class="btn btn-default">提交</button>
     </div>
+<!--
 </form>
+-->
 {% else %}
     <p>No polls are available.</p>
 {% endif %}

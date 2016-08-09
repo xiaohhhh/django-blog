@@ -14,6 +14,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 import HTMLParser
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import sys
 reload(sys)
@@ -24,13 +25,41 @@ def index(request):
         login=True
     else:
         login = False
-    latest_entry_list = Entry.objects.all()
-    template = loader.get_template('index.html')
-    #print latest_entry_list
+    entry_list = Entry.objects.all()
+    paginator = Paginator(entry_list, 5) # Show 25 contacts per page
+    page = request.GET.get('page')
+    try:
+        entries = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        entries = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        entries = paginator.page(paginator.num_pages)
     context = {
-        'latest_entry_list': latest_entry_list,
+        'latest_entry_list': entries,
         'login':login,
     }
+    template = loader.get_template('page.html')
+    return HttpResponse(template.render(context, request))
+
+def page(request):
+    entry_list = Entry.objects.all()
+    paginator = Paginator(entry_list, 10) # Show 25 contacts per page
+    page = request.GET.get('page')
+    try:
+        entries = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        entries = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        entries = paginator.page(paginator.num_pages)
+    context = {
+        'latest_entry_list': entries,
+        'login':login,
+    }
+    template = loader.get_template('page.html')
     return HttpResponse(template.render(context, request))
 
 
@@ -85,7 +114,9 @@ def add_comment(request):
     comments = html_parser.unescape(comments)
     comment=Comment(comments=comments,pub_date = now,mod_date = now,entry_id = entry_id,user_id = user_id)
     comment.save()
-    return HttpResponseRedirect("/blog/entry/"+str(entry_id)+"/")
+    comment_last = Comment.objects.filter(user_id=user_id,entry_id = entry_id).last()
+    print comment_last.id
+    return HttpResponse(comment_last.comments)
 
 def register(request):
     class RegisterForm(forms.Form):

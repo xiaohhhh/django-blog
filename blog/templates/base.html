@@ -10,6 +10,7 @@
     {% load staticfiles %}
     <script src="{% static "js/jquery.hotkeys.js" %}"></script>
     <script src="{% static "js/ckeditor/ckeditor.js" %}"></script>
+    <!--
     {% load staticfiles %}
     <script src="{% static "js/bootstrap-wysiwyg.min.js"%}"></script>
     <script>
@@ -17,6 +18,26 @@
         $('#editor').wysiwyg();
     });
     </script>
+    -->
+    <script>
+$(document).ready(function(){
+  $(".btn").click(function(){
+    var comments=$("#editor1").val();
+    //console.log(comments);
+    var entry_id=$("#entry_id").val();
+    //console.log(entry_id);
+    $.ajax({
+    method: "POST",
+    url: "/blog/add_comment/",
+    data: { comments: comments, entry_id:entry_id }
+    }).done(function( msg ) {
+    //console.log(msg);
+    var new_comment="<li><p>"+msg+"</li></p><hr>";
+    $(".list-unstyled").append(new_comment);
+  });
+ });
+});
+</script>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static "css/public.css"  %}" />
     

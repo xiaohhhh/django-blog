@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+
+{% if latest_entry_list %}
+    <ul class="list-group">
+    {% for entry in latest_entry_list %}
+        <li class="list-group-item"><a href="/blog/entry/{{ entry.id }}/">{{ entry.head_line }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if latest_entry_list.has_previous %}
+            <a href="?page={{ latest_entry_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ latest_entry_list.number }} of {{ latest_entry_list.paginator.num_pages }}.
+        </span>
+
+        {% if latest_entry_list.has_next %}
+            <a href="?page={{ latest_entry_list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

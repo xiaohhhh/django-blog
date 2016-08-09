@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     # ex: /polls/
     url(r'^$', views.index, name='index'),
+    url(r'^page/$', views.page, name='page'),
     url(r'^post/$', views.post, name='post'),
     url(r'^add_entry/$', views.add_entry, name='add_entry'),
     url(r'^add_comment/$', views.add_comment, name='add_comment'),
