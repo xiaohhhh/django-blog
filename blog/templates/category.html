@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}index{% endblock %}
+
+{% block content %}
+<ul class="list-group">
+    <li class="list-group-item">ID:{{category.id}}</li>
+    <li class="list-group-item">NAME:{{category.name}}</li>
+    <li class="list-group-item">INFO:{{category.info}}</li>
+</ul>
+
+{% if entries %}
+    <ul class="list-group">
+    {% for entry in entries %}
+        <li class="list-group-item"><a href="/blog/entry/{{entry.id }}/">{{ entry.head_line }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+{% endblock %}
